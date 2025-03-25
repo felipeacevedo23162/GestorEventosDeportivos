@@ -6,28 +6,28 @@ import co.edu.elpoli.ces3.gestoreventosdeportivos.modelo.Jugador;
 
 public class main {
     public static void main(String[] args) {
-        EventoDAOArchivo dao = new EventoDAOArchivo();
-
-        // Crear eventos
-        Evento evento1 = new Evento(1, "Final Copa Libertadores", "2025-12-10", "Estadio Maracaná", "Fútbol", 80000, "Programado");
-        evento1.agregarEquipo(1);
-        evento1.agregarEquipo(2);
-
-        dao.guardarEvento(evento1);
-
-        // Leer eventos guardados
-        System.out.println("Eventos guardados:");
-        dao.obtenerTodos().forEach(System.out::println);
-
-        // Actualizar evento
-        evento1.setEstado("Finalizado");
-        evento1.venderEntradas(30000);
-        dao.actualizarEvento(evento1);
-
-        System.out.println("\nEventos después de la actualización:");
-        dao.obtenerTodos().forEach(System.out::println);
-
-
+//        EventoDAOArchivo dao = new EventoDAOArchivo();
+//
+//        // Crear eventos
+//        Evento evento1 = new Evento(1, "Final Copa Libertadores", "2025-12-10", "Estadio Maracaná", "Fútbol", 80000, "Programado");
+//        evento1.agregarEquipo(1);
+//        evento1.agregarEquipo(2);
+//
+//        dao.guardarEvento(evento1);
+//
+//        // Leer eventos guardados
+//        System.out.println("Eventos guardados:");
+//        dao.obtenerTodos().forEach(System.out::println);
+//
+//        // Actualizar evento
+//        evento1.setEstado("Finalizado");
+//        evento1.venderEntradas(30000);
+//        dao.actualizarEvento(evento1);
+//
+//        System.out.println("\nEventos después de la actualización:");
+//        dao.obtenerTodos().forEach(System.out::println);
+//
+//
 
 //        EquipoDAOArchivo dao = new EquipoDAOArchivo();
 //

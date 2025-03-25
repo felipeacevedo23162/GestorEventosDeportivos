@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -70,29 +71,64 @@ public class JugadorServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String nombre = request.getParameter("nombre");
-        String apellido = request.getParameter("apellido");
-        String fechaNacimiento = request.getParameter("fechaNacimiento");
-        String nacionalidad = request.getParameter("nacionalidad");
-        String posicion = request.getParameter("posicion");
-        int numero = Integer.parseInt(request.getParameter("numero"));
-        int equipoId = Integer.parseInt(request.getParameter("equipoId"));
-        boolean estadoActivo = Boolean.parseBoolean(request.getParameter("estadoActivo"));
+        try {
+            // Obtener el ID desde los parámetros de la URL (ejemplo: ?id=3)
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del jugador es requerido en la URL\"}");
+                return;
+            }
+            System.out.println(idParam);
+            int id = Integer.parseInt(idParam);
 
-        Jugador jugadorActualizado = new Jugador(id, nombre, apellido, fechaNacimiento, nacionalidad, posicion, numero, equipoId, estadoActivo);
-        jugadorDAO.actualizarJugador(jugadorActualizado);
+            // Leer el cuerpo como JSON
+            BufferedReader reader = request.getReader();
+            StringBuilder jsonBody = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBody.append(line);
+            }
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(gson.toJson(jugadorActualizado));
+            // Parsear el JSON a un objeto Jugador
+            Jugador jugadorActualizado = gson.fromJson(jsonBody.toString(), Jugador.class);
+            jugadorActualizado.setId(id); // Asegurarse de que el ID sea el de la URL
+
+            // Actualizar el jugador usando el DAO
+            jugadorDAO.actualizarJugador(jugadorActualizado);
+
+            // Responder con el JSON actualizado
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(gson.toJson(jugadorActualizado));
+
+        } catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"error\": \"El ID debe ser un número válido\"}");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\": \"Error actualizando el jugador: " + e.getMessage() + "\"}");
+        }
     }
+
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        jugadorDAO.eliminarJugador(id);
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del jugador es requerido en la URL\"}");
+                return;
+            }
+            int id = Integer.parseInt(idParam);
+            jugadorDAO.eliminarJugador(id);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"message\":\"Jugador eliminado correctamente.\"}");
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"Jugador eliminado correctamente.\"}");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\": \"Error eliminar el jugador: " + e.getMessage() + "\"}");
+        }
+
     }
 }

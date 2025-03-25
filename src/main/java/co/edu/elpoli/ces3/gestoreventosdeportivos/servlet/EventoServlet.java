@@ -58,11 +58,12 @@ public class EventoServlet extends HttpServlet {
         String fecha = request.getParameter("fecha");
         String lugar = request.getParameter("lugar");
         String deporte = request.getParameter("deporte");
+        int entradasVendidas = Integer.parseInt(request.getParameter("entradasVendidas"));
         int capacidad = Integer.parseInt(request.getParameter("capacidad"));
         String estado = request.getParameter("estado");
 
         int id = (int) (Math.random() * 10000);
-        Evento nuevoEvento = new Evento(id, nombre, fecha, lugar, deporte, capacidad, estado);
+        Evento nuevoEvento = new Evento(id, nombre, fecha, lugar, deporte, entradasVendidas, capacidad, estado);
         eventoDAO.guardarEvento(nuevoEvento);
 
         response.setContentType("application/json;charset=UTF-8");
@@ -76,10 +77,11 @@ public class EventoServlet extends HttpServlet {
         String fecha = request.getParameter("fecha");
         String lugar = request.getParameter("lugar");
         String deporte = request.getParameter("deporte");
+        int entradasVendidas = Integer.parseInt(request.getParameter("entradasVendidas"));
         int capacidad = Integer.parseInt(request.getParameter("capacidad"));
         String estado = request.getParameter("estado");
 
-        Evento eventoActualizado = new Evento(id, nombre, fecha, lugar, deporte, capacidad, estado);
+        Evento eventoActualizado = new Evento(id, nombre, fecha, lugar, deporte, entradasVendidas, capacidad, estado);
         eventoDAO.actualizarEvento(eventoActualizado);
 
         response.setContentType("application/json;charset=UTF-8");

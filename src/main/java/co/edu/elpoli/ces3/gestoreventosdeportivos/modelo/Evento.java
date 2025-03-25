@@ -13,7 +13,7 @@ public class Evento {
     private int entradasVendidas;
     private String estado;
 
-    public Evento(int id, String nombre, String fecha, String lugar, String deporte, int capacidad, String estado) {
+    public Evento(int id, String nombre, String fecha, String lugar, String deporte, int entradasVendidas, int capacidad, String estado) {
         this.id = id;
         this.nombre = nombre;
         this.fecha = fecha;
@@ -21,7 +21,7 @@ public class Evento {
         this.deporte = deporte;
         this.equiposParticipantes = new ArrayList<>();
         this.capacidad = capacidad;
-        this.entradasVendidas = 0;
+        this.entradasVendidas = entradasVendidas;
         this.estado = estado;
     }
 
@@ -75,11 +75,10 @@ public class Evento {
                 partes[2],
                 partes[3],
                 partes[4],
+                Integer.parseInt(partes[6]),
                 Integer.parseInt(partes[5]),
                 partes[7]
         );
-        evento.entradasVendidas = Integer.parseInt(partes[6]);
-
         if (partes.length > 8) {
             for (int i = 8; i < partes.length; i++) {
                 evento.agregarEquipo(Integer.parseInt(partes[i]));

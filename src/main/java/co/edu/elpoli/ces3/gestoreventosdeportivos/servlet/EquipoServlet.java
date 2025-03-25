@@ -65,26 +65,52 @@ public class EquipoServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String nombre = request.getParameter("nombre");
-        String deporte = request.getParameter("deporte");
-        String ciudad = request.getParameter("ciudad");
-        String fechaFundacion = request.getParameter("fechaFundacion");
-        String logo = request.getParameter("logo");
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del jugador es requerido en la URL\"}");
+                return;
+            }
+            int id = Integer.parseInt(idParam);
+            String nombre = request.getParameter("nombre");
+            String deporte = request.getParameter("deporte");
+            String ciudad = request.getParameter("ciudad");
+            String fechaFundacion = request.getParameter("fechaFundacion");
+            String logo = request.getParameter("logo");
 
-        Equipo equipoActualizado = new Equipo(id, nombre, deporte, ciudad, fechaFundacion, logo);
-        equipoDAO.actualizarEquipo(equipoActualizado);
+            Equipo equipoActualizado = new Equipo(id, nombre, deporte, ciudad, fechaFundacion, logo);
+            equipoDAO.actualizarEquipo(equipoActualizado);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(gson.toJson(equipoActualizado));
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(gson.toJson(equipoActualizado));
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\": \"Error actualizando el equipo: " + e.getMessage() + "\"}");
+
+        }
+
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        equipoDAO.eliminarEquipo(id);
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del jugador es requerido en la URL\"}");
+                return;
+            }
+            int id = Integer.parseInt(idParam);
+            equipoDAO.eliminarEquipo(id);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"message\":\"Equipo eliminado correctamente.\"}");
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"Equipo eliminado correctamente.\"}");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

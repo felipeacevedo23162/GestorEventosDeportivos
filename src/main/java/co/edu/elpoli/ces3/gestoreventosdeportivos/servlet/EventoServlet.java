@@ -72,28 +72,55 @@ public class EventoServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        String nombre = request.getParameter("nombre");
-        String fecha = request.getParameter("fecha");
-        String lugar = request.getParameter("lugar");
-        String deporte = request.getParameter("deporte");
-        int entradasVendidas = Integer.parseInt(request.getParameter("entradasVendidas"));
-        int capacidad = Integer.parseInt(request.getParameter("capacidad"));
-        String estado = request.getParameter("estado");
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del evento es requerido en la URL\"}");
+                return;
+            }
+            int id = Integer.parseInt(idParam);
+            String nombre = request.getParameter("nombre");
+            String fecha = request.getParameter("fecha");
+            String lugar = request.getParameter("lugar");
+            String deporte = request.getParameter("deporte");
+            int entradasVendidas = Integer.parseInt(request.getParameter("entradasVendidas"));
+            int capacidad = Integer.parseInt(request.getParameter("capacidad"));
+            String estado = request.getParameter("estado");
 
-        Evento eventoActualizado = new Evento(id, nombre, fecha, lugar, deporte, entradasVendidas, capacidad, estado);
-        eventoDAO.actualizarEvento(eventoActualizado);
+            Evento eventoActualizado = new Evento(id, nombre, fecha, lugar, deporte, entradasVendidas, capacidad, estado);
+            eventoDAO.actualizarEvento(eventoActualizado);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(gson.toJson(eventoActualizado));
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(gson.toJson(eventoActualizado));
+        } catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\": \"Error actualizando el evento: " + e.getMessage() + "\"}");
+        }
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        eventoDAO.eliminarEvento(id);
+        try {
+            String idParam = request.getParameter("id");
+            if (idParam == null || idParam.isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"error\": \"El ID del evento es requerido en la URL\"}");
+                return;
+            }
+            int id = Integer.parseInt(idParam);
+            eventoDAO.eliminarEvento(id);
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"message\":\"Evento eliminado correctamente.\"}");
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"Evento eliminado correctamente.\"}");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("{\"error\": \"Error eliminar el evento: " + e.getMessage() + "\"}");
+
+        }
+
     }
 }

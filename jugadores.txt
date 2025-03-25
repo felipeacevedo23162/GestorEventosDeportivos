@@ -1,0 +1,2 @@
+1,Lionel,Messi,1987-06-24,Argentina,Mediocampista,10,1,true
+2,Cristiano,Ronaldo,1985-02-05,Portugal,Delantero,7,2,true

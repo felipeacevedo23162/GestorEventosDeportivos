@@ -1,0 +1,2 @@
+1,Atlético Nacional S.A.,Fútbol,Medellín,1947-03-07,logo1.png,10,23
+2,Medellín,Fútbol,Medellín,1913-11-14,logo2.png,7,11
